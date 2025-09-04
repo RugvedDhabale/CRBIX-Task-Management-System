@@ -31,28 +31,23 @@ public class User {
     private LocalDateTime inTime;
     private LocalDateTime outTime;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // NEW: Role column (ADMIN / EMPLOYEE)
+    private String role = "EMPLOYEE";
+
+    // Make tasks eager so they load with employees
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Task> tasks = new ArrayList<>();
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public String getUsername() {
-        return username;
-    }
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    // --- Getters and Setters ---
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public String getPassword() {
-        return password;
-    }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+
+    public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
     public String getConfirmPassword() { return confirmPassword; }
@@ -66,6 +61,9 @@ public class User {
 
     public LocalDateTime getOutTime() { return outTime; }
     public void setOutTime(LocalDateTime outTime) { this.outTime = outTime; }
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 
     public List<Task> getTasks() { return tasks; }
     public void setTasks(List<Task> tasks) { this.tasks = tasks; }

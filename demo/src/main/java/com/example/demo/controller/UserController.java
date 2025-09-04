@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.Admin;
 import com.example.demo.entity.Task;
 import com.example.demo.entity.User;
+import com.example.demo.repository.AdminRepository;
 import com.example.demo.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -21,13 +23,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AdminRepository adminRepository;
+
     // ---------------- HOME REDIRECT ----------------
     @GetMapping("/")
     public String homeRedirect() {
         return "redirect:/login"; // default page = login
     }
-
-
 
     // ---------------- LOGIN METHODS ----------------
     @GetMapping("/login")
@@ -35,45 +38,56 @@ public class UserController {
         model.addAttribute("user", new User());
         return "login"; // login.jsp
     }
-
-
-    //if  successfully login user will goes to task page
     @PostMapping("/login")
     public String loginUser(@ModelAttribute("user") User user, Model model, HttpSession session) {
+
+        // 🔹 First check in admin table
+        Admin admin = adminRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
+        if (admin != null) {
+            session.setAttribute("admin", true);
+            session.setAttribute("adminName", admin.getUsername());
+            session.setAttribute("adminLoginTime", LocalDateTime.now());
+            return "redirect:/admin";
+        }
+
+        //  If not admin, then check normal user
         User validUser = userService.login(user.getUsername(), user.getPassword());
         if (validUser != null) {
-            // save login time
             validUser.setInTime(LocalDateTime.now());
             userService.saveUser(validUser);
 
-            // fetch tasks
             List<Task> tasks = userService.getTasksByUserId(validUser.getId());
 
-            // format times
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
             String inTime = validUser.getInTime() != null ? validUser.getInTime().format(formatter) : "--:--";
             String outTime = validUser.getOutTime() != null ? validUser.getOutTime().format(formatter) : "--:--";
 
-            // store in session
             session.setAttribute("userId", validUser.getId());
 
-            // send data to JSP
             model.addAttribute("name", validUser.getUsername());
             model.addAttribute("tasks", tasks);
             model.addAttribute("inTime", inTime);
             model.addAttribute("outTime", outTime);
             model.addAttribute("taskCount", tasks.size());
 
-            return "task"; // task.jsp
+            return "task";
         } else {
             model.addAttribute("error", "Invalid Username or Password!");
             return "login";
         }
     }
 
+
     // ---------------- LOGOUT METHOD ----------------
     @GetMapping("/logout")
     public String logoutUser(HttpSession session) {
+        // If admin logged in
+        if (session.getAttribute("admin") != null) {
+            session.invalidate();
+            return "redirect:/login";
+        }
+
+        // If normal user logged in
         Long userId = (Long) session.getAttribute("userId");
         if (userId != null) {
             User user = userService.findUserById(userId);
@@ -133,7 +147,5 @@ public class UserController {
 
         return "task"; // task.jsp
     }
-
-
 
 }

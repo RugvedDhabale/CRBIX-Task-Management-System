@@ -4,10 +4,10 @@ import com.example.demo.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-
-    //it will search username and password in database
     User findByUsernameAndPassword(String username, String password);
-
+    List<User> findByRole(String role); // to fetch all EMPLOYEEs
 }

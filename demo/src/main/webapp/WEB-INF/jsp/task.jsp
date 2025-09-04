@@ -8,6 +8,7 @@
 </head>
 <body class="p-4">
 
+
 <div class="mb-3">
     <p><strong>Username:</strong> ${name}</p>
     <p><strong>In Time:</strong> ${inTime}</p>
@@ -17,6 +18,7 @@
 </div>
 
 <div class="d-grid gap-2 d-md-block">
+
     <c:forEach var="task" items="${tasks}" varStatus="status">
         <button class="btn btn-primary m-1"
                 data-bs-toggle="modal"
