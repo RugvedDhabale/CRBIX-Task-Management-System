@@ -8,7 +8,7 @@
 </head>
 <body class="p-4">
 
-
+<!-- Employee Info -->
 <div class="mb-3">
     <p><strong>Username:</strong> ${name}</p>
     <p><strong>In Time:</strong> ${inTime}</p>
@@ -17,15 +17,19 @@
     <a href="${pageContext.request.contextPath}/logout" class="btn btn-danger">Logout</a>
 </div>
 
+<!-- Task Buttons -->
 <div class="d-grid gap-2 d-md-block">
-
     <c:forEach var="task" items="${tasks}" varStatus="status">
-        <button class="btn btn-primary m-1"
-                data-bs-toggle="modal"
-                data-bs-target="#taskModal"
+        <button class="btn btn-primary m-1" data-bs-toggle="modal" data-bs-target="#taskModal"
+                data-id="${task.id}"
                 data-title="${task.title}"
                 data-summary="${task.summary}"
-                data-description="${task.description}">
+                data-description="${task.description}"
+                data-priority="${task.priority}"
+
+                data-assignedby="${task.assignedBy != null ? task.assignedBy.username : 'Admin'}"
+                data-duedate="${task.dueDate != null ? task.dueDate : 'No Deadline'}"
+                data-status="${task.status}">
             Task ${status.index + 1}
         </button>
     </c:forEach>
@@ -43,21 +47,62 @@
                 <p><strong>Title:</strong> <span id="taskTitleText"></span></p>
                 <p><strong>Summary:</strong> <span id="taskSummary"></span></p>
                 <p><strong>Description:</strong> <span id="taskDescription"></span></p>
+                <p><strong>Assigned By:</strong> <span id="taskAssignedBy"></span> Sir</p>
+                <p><strong>Priority:</strong> <span id="taskPriority"></span></p>
+
+                <p><strong>Deadline:</strong> <span id="taskDeadline"></span></p>
+            </div>
+            <div class="modal-footer">
+                <form id="acceptForm" method="post" action="${pageContext.request.contextPath}/tasks/accept">
+                    <input type="hidden" name="taskId" id="taskIdField">
+                    <button type="submit" class="btn btn-success" id="acceptButton">Accept</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+    // Fill modal values dynamically
     let taskModal = document.getElementById('taskModal');
-    taskModal.addEventListener('show.bs.modal', function (event) {
-        let button = event.relatedTarget;
-        document.getElementById('taskTitleText').innerText = button.getAttribute('data-title');
-        document.getElementById('taskSummary').innerText = button.getAttribute('data-summary');
-        document.getElementById('taskDescription').innerText = button.getAttribute('data-description');
-    });
-</script>
+taskModal.addEventListener('show.bs.modal', function (event) {
+    let button = event.relatedTarget;
+    let taskId = button.getAttribute('data-id');
+    let status = button.getAttribute('data-status');
 
+    document.getElementById('taskIdField').value = taskId;
+    document.getElementById('taskTitleText').innerText = button.getAttribute('data-title');
+    document.getElementById('taskSummary').innerText = button.getAttribute('data-summary');
+    document.getElementById('taskDescription').innerText = button.getAttribute('data-description');
+
+    // ✅ priority mapping
+    const priorityMap = {
+        "1": "Critical",
+        "2": "High",
+        "3": "Medium",
+        "4": "Low",
+        "5": "Very Low"
+    };
+    document.getElementById('taskPriority').innerText = priorityMap[button.getAttribute('data-priority')];
+
+    document.getElementById('taskAssignedBy').innerText = button.getAttribute('data-assignedby');
+    document.getElementById('taskDeadline').innerText = button.getAttribute('data-duedate');
+
+    let acceptButton = document.getElementById('acceptButton');
+    if (status === "In Progress" || status === "Completed") {
+        acceptButton.innerText = "Accepted";
+        acceptButton.classList.remove("btn-success");
+        acceptButton.classList.add("btn-secondary");
+        acceptButton.disabled = true;
+    } else {
+        acceptButton.innerText = "Accept";
+        acceptButton.classList.remove("btn-secondary");
+        acceptButton.classList.add("btn-success");
+        acceptButton.disabled = false;
+    }
+});
+
+</script>
 
 </body>
 </html>

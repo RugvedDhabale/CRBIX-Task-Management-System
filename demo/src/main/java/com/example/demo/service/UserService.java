@@ -23,25 +23,28 @@ public class UserService {
         return userRepository.findByUsernameAndPassword(username, password);
     }
 
-    // Register & Update User
+    // Save or update user
     public void saveUser(User user) {
         userRepository.save(user);
     }
 
-    // Task Operations
+    // Save task
+    public void saveTask(Task task) {
+        taskRepository.save(task);
+    }
+
+    // Get tasks by user
     public List<Task> getTasksByUserId(Long userId) {
         return taskRepository.findByUserId(userId);
     }
 
+    // Find task by id
     public Task getTaskById(Long taskId) {
-
         return taskRepository.findById(taskId).orElse(null);
     }
 
+    // Find user by id
     public User findUserById(Long userId) {
         return userRepository.findById(userId).orElse(null);
     }
-
-
-
 }
