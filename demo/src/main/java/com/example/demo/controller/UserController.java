@@ -1,4 +1,5 @@
 package com.example.demo.controller;
+
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -70,11 +71,11 @@ public class UserController {
 
             List<Task> tasks = userService.getTasksByUserId(validUser.getId());
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
             session.setAttribute("userId", validUser.getId());
             model.addAttribute("name", validUser.getUsername());
             model.addAttribute("tasks", tasks);
             model.addAttribute("inTime", validUser.getInTime().format(formatter));
-            model.addAttribute("outTime", validUser.getOutTime() != null ? validUser.getOutTime().format(formatter) : "--:--");
             model.addAttribute("taskCount", tasks.size());
 
             return "task";
@@ -83,9 +84,6 @@ public class UserController {
             return "login";
         }
     }
-
-
-
 
     // ----- LOGOUT -----
     @GetMapping("/logout")
@@ -124,34 +122,54 @@ public class UserController {
             return "register";
         }
 
+        String uploadsDir = request.getServletContext().getRealPath("/uploads/");
+        File dir = new File(uploadsDir);
+        if (!dir.exists()) dir.mkdirs();
+
         MultipartFile marksheetFile = user.getMarksheetFile();
         if (marksheetFile != null && !marksheetFile.isEmpty()) {
             if (marksheetFile.getSize() > 1024 * 1024) {
-                model.addAttribute("error", "File size must be <= 1MB");
+                model.addAttribute("error", "Marksheet file size must be <= 1MB");
                 return "register";
             }
-            String uploadsDir = request.getServletContext().getRealPath("/uploads/");
-            File dir = new File(uploadsDir);
-            if (!dir.exists()) dir.mkdirs();
-
-            String filename = System.currentTimeMillis() + "_" + marksheetFile.getOriginalFilename();
+            String filename = System.currentTimeMillis() + "_marksheet_" + marksheetFile.getOriginalFilename();
             File file = new File(dir, filename);
             marksheetFile.transferTo(file);
             user.setAcademicMarksheet("/uploads/" + filename);
+        }
+
+        MultipartFile aadharFile = user.getAadharFile();
+        if (aadharFile != null && !aadharFile.isEmpty()) {
+            if (aadharFile.getSize() > 1024 * 1024) {
+                model.addAttribute("error", "Aadhar file size must be <= 1MB");
+                return "register";
+            }
+            String filename = System.currentTimeMillis() + "_aadhar_" + aadharFile.getOriginalFilename();
+            File file = new File(dir, filename);
+            aadharFile.transferTo(file);
+            user.setAadharCard("/uploads/" + filename);
+        }
+
+        MultipartFile panFile = user.getPanFile();
+        if (panFile != null && !panFile.isEmpty()) {
+            if (panFile.getSize() > 1024 * 1024) {
+                model.addAttribute("error", "PAN file size must be <= 1MB");
+                return "register";
+            }
+            String filename = System.currentTimeMillis() + "_pan_" + panFile.getOriginalFilename();
+            File file = new File(dir, filename);
+            panFile.transferTo(file);
+            user.setPanCard("/uploads/" + filename);
         }
 
         userService.saveUser(user);
         return "redirect:/login";
     }
 
-
-
-
-//pdf debug - 1
     // ---------------- VIEW PDF (Debugging) ----------------
     @GetMapping("/view-pdf/{filename}")
     public ResponseEntity<FileSystemResource> viewPDF(@PathVariable String filename) {
-        String uploadsDir = "src/main/webapp/uploads/"; // folder where PDFs are stored
+        String uploadsDir = "src/main/webapp/uploads/";
         File file = new File(uploadsDir + filename);
         if (!file.exists()) {
             return ResponseEntity.notFound().build();
@@ -163,7 +181,7 @@ public class UserController {
                 .header(HttpHeaders.CONTENT_TYPE, "application/pdf")
                 .body(resource);
     }
-//pdf debug - 2
+
     @GetMapping("/debug-pdfs")
     public String debugPDFs(Model model) {
         String uploadsDir = "src/main/webapp/uploads/";
@@ -174,10 +192,6 @@ public class UserController {
         return "viewPdf";
     }
 
-
-
-
-    
     // ----- TASK PAGE -----
     @GetMapping("/tasks")
     public String showTasks(HttpSession session, Model model) {
@@ -186,12 +200,14 @@ public class UserController {
 
         User user = userService.findUserById(userId);
         List<Task> tasks = userService.getTasksByUserId(userId);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        String inTime = user.getInTime() != null ? user.getInTime().format(timeFormatter) : "";
+
+        model.addAttribute("inTime", inTime);
         model.addAttribute("tasks", tasks);
         model.addAttribute("name", user.getUsername());
-        model.addAttribute("inTime", user.getInTime().format(formatter));
-        model.addAttribute("outTime", user.getOutTime() != null ? user.getOutTime().format(formatter) : "--:--");
         model.addAttribute("taskCount", tasks.size());
 
         return "task";
@@ -210,4 +226,38 @@ public class UserController {
         }
         return "redirect:/tasks";
     }
+
+    // 🔹 Employee Escalation Page
+    @GetMapping("/emp/escalation")
+    public String viewEscalations(HttpSession session, Model model) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        User user = userService.findUserById(userId);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        // ✅ inTime formatted only HH:mm
+        String inTime = "";
+        if (user.getInTime() != null) {
+            inTime = user.getInTime().format(formatter);
+        }
+
+        // Common info
+        model.addAttribute("name", user.getUsername());
+        model.addAttribute("inTime", inTime);
+        model.addAttribute("taskCount", userService.getTaskCount(user.getId()));
+
+        // Due & Escalated tasks
+        List<Task> dueTasks = userService.getDueTasks(user);
+        List<Task> escalatedTasks = userService.getEscalatedTasks(user);
+
+        model.addAttribute("dueTasks", dueTasks);
+        model.addAttribute("escalatedTasks", escalatedTasks);
+
+        return "emp-escalation";
+    }
+
+
 }
