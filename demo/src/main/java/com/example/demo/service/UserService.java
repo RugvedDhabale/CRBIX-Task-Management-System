@@ -61,13 +61,13 @@ public class UserService {
         return taskRepository.findByUserId(userId);
     }
 
-    // 🔹 Calculate shift hours from login time
+    //  Calculate shift hours from login time
     private long getShiftHours(User user) {
         if (user.getInTime() == null) return 0;
         return Duration.between(user.getInTime(), LocalDateTime.now()).toHours();
     }
 
-    // 🔹 Due Tasks
+    //  Due Tasks
     public List<Task> getDueTasks(User user) {
         long shiftHours = getShiftHours(user);
         LocalDate today = LocalDate.now();
@@ -79,7 +79,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    // 🔹 Escalated Tasks
+    //  Escalated Tasks
     public List<Task> getEscalatedTasks(User user) {
         long shiftHours = getShiftHours(user);
         LocalDate today = LocalDate.now();

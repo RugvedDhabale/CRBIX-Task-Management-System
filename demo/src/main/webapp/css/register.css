@@ -1,0 +1,172 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background: rgb(169, 173, 179);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(to right, #006f8e, #00bcd4);
+  color: white;
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  height: 80px;
+}
+
+.logo h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.power-icon {
+  font-size: 40px;
+  color: black;
+  cursor: pointer;
+}
+
+/* Card */
+.register-container {
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 90%;
+  max-width: 1000px;
+  margin-top: 40px;
+}
+
+/* Left image */
+.illustration {
+  flex: 1 1 250px;
+  background: rgb(207, 207, 207);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.illustration img {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+}
+
+/* Right form */
+.register-form {
+  flex: 1 1 280px;
+  background: rgb(207, 207, 207);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-circle {
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(to right, #00bcd4, #006f8e);
+  border-radius: 50%;
+  border: 1px solid #0e0e0e;
+  margin-bottom: 25px;
+}
+
+.register-form input[type="text"],
+.register-form input[type="password"] {
+  width: 100%;
+  max-width: 350px;
+  margin: 8px 0;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #0e0e0e;
+  font-size: 14px;
+  background: linear-gradient(to right, #00bcd4, #006f8e);
+  color: white;
+  font-weight: 600;
+}
+
+/* Upload Section */
+.upload-section {
+  width: 100%;
+  max-width: 350px;
+  margin-top: 20px;
+}
+
+.file-upload {
+  margin: 10px 0;
+  background: linear-gradient(to right, #00bcd4, #006f8e);
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #0e0e0e;
+  font-weight: 600;
+}
+
+.file-upload input {
+  margin-top: 5px;
+  width: 100%;
+}
+
+.note {
+  background: #fff3cd;
+  color: #856404;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  border: 1px solid #ffeeba;
+  margin-top: 10px;
+}
+
+/* Register Button */
+#registerBtn {
+  margin-top: 20px;
+  padding: 12px;
+  background: rgb(33, 150, 243);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 75%;
+  transition: background 0.3s ease;
+}
+
+#registerBtn:hover {
+  background: #1976d2;
+}
+
+/* Login Section */
+.login-link {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.login-link p {
+  font-size: 14px;
+}
+
+.login-link button {
+  margin-top: 5px;
+  padding: 6px 40px;
+  background: rgb(207, 207, 207);
+  color: #006f8e;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}

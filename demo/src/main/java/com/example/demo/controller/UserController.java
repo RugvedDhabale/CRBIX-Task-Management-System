@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+
 @Controller
 public class UserController {
 
@@ -227,7 +228,7 @@ public class UserController {
         return "redirect:/tasks";
     }
 
-    // 🔹 Employee Escalation Page
+    //  Employee Escalation Page
     @GetMapping("/emp/escalation")
     public String viewEscalations(HttpSession session, Model model) {
         Long userId = (Long) session.getAttribute("userId");
@@ -238,7 +239,7 @@ public class UserController {
         User user = userService.findUserById(userId);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
-        // ✅ inTime formatted only HH:mm
+        //  inTime formatted only HH:mm
         String inTime = "";
         if (user.getInTime() != null) {
             inTime = user.getInTime().format(formatter);
