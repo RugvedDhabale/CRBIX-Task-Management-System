@@ -1,70 +1,83 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Employee Escalation</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/css/emp-escalation.css'/>"/>
 </head>
-<body class="p-4">
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <img class="img" src="${pageContext.request.contextPath}/img/CRBIXLOGO.png" alt="Logo">
+        </div>
 
-<div class="container">
-    <h2 class="mb-4">My Escalation Dashboard</h2>
+    </header>
 
-    <!-- User Info -->
-    <div class="mb-3">
-        <p><strong>Welcome:</strong> ${name}</p>
-<p><strong>Login Time:</strong> ${inTime}</p>
-        <p><strong>Total Tasks Assigned:</strong> ${taskCount}</p>
-    </div>
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Left Panel -->
+        <div class="left-panel">
+            <div class="profile-circle"></div>
+            <p class="logocircleP" style="font-size:20px; margin-top:10px;">${name}</p>
+            <div class="panel-box">
+                In Time:<br> ${inTime}
+            </div>
 
-    <div class="row">
-        <!-- Due Tasks -->
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">Due Today</div>
-                <div class="card-body">
-                    <c:forEach var="task" items="${dueTasks}">
-                        <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-                            <a href="#" class="task-detail-link fw-bold text-primary"
-                               data-title="${task.title}"
-                               data-summary="${task.summary}"
-                               data-description="${task.description}">
-                                ${task.title}
-                            </a>
-                            <div class="text-muted small text-end">
-                                <div>Deadline: ${task.dueDate}</div>
-                                <span class="badge bg-secondary">${task.status}</span>
-                            </div>
-                        </div>
-                    </c:forEach>
-                    <c:if test="${empty dueTasks}">
-                        <div class="text-center text-muted">No due tasks</div>
-                    </c:if>
-                </div>
+            <div class="panel-box">
+                No of Tasks Assigned:<br> ${taskCount}
             </div>
         </div>
 
-        <!-- Escalated Tasks -->
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">Escalated</div>
-                <div class="card-body">
+        <!-- Right Panel -->
+        <div class="right-panel escalation-panel">
+            <div class="column">
+                <h3 class="column-title">Due Tasks</h3>
+                <div class="task-list">
+                    <c:forEach var="task" items="${dueTasks}">
+                        <div class="task-card priority-p${task.priority}"
+                             onclick="openModal(this)"
+                             data-id="${task.id}"
+                             data-title="${task.title}"
+                             data-summary="${task.summary}"
+                             data-description="${task.description}"
+                             data-priority="${task.priority}"
+                             data-assignedby="${task.assignedBy != null ? task.assignedBy.username : 'Admin'}"
+                             data-duedate="${task.dueDate != null ? task.dueDate : 'No Deadline'}"
+                             data-status="${task.status}">
+                            <p><strong>${task.title}</strong></p>
+                            <span class="badge">${task.status}</span>
+                        </div>
+                    </c:forEach>
+                    <c:if test="${empty dueTasks}">
+                        <div class="no-task">No due tasks</div>
+                    </c:if>
+                </div>
+            </div>
+
+            <div class="column">
+                <h3 class="column-title">Escalated Tasks</h3>
+                <div class="task-list">
                     <c:forEach var="task" items="${escalatedTasks}">
-                        <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-                            <a href="#" class="task-detail-link fw-bold text-danger"
-                               data-title="${task.title}"
-                               data-summary="${task.summary}"
-                               data-description="${task.description}">
-                                ${task.title}
-                            </a>
-                            <div class="text-muted small text-end">
-                                <div>Deadline: ${task.dueDate}</div>
-                                <span class="badge bg-danger">${task.status}</span>
-                            </div>
+                        <div class="task-card priority-p${task.priority}"
+                             onclick="openModal(this)"
+                             data-id="${task.id}"
+                             data-title="${task.title}"
+                             data-summary="${task.summary}"
+                             data-description="${task.description}"
+                             data-priority="${task.priority}"
+                             data-assignedby="${task.assignedBy != null ? task.assignedBy.username : 'Admin'}"
+                             data-duedate="${task.dueDate != null ? task.dueDate : 'No Deadline'}"
+                             data-status="${task.status}">
+                            <p><strong>${task.title}</strong></p>
+                            <span class="badge">${task.status}</span>
                         </div>
                     </c:forEach>
                     <c:if test="${empty escalatedTasks}">
-                        <div class="text-center text-muted">No escalated tasks</div>
+                        <div class="no-task">No escalated tasks</div>
                     </c:if>
                 </div>
             </div>
@@ -72,40 +85,54 @@
     </div>
 
     <!-- Back Button -->
-    <a href="${pageContext.request.contextPath}/tasks" class="btn btn-secondary mt-3">Back to Tasks</a>
-</div>
+    <a href="${pageContext.request.contextPath}/tasks" class="back-btn">Back to Dashboard</a>
 
-<!-- Modal for Task Details -->
-<div class="modal fade" id="taskDetailModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
+    <!-- Task Modal -->
+    <div id="modal" class="modal-overlay">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Task Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Title:</strong> <span id="taskTitle"></span></p>
-                <p><strong>Summary:</strong> <span id="taskSummary"></span></p>
-                <p><strong>Description:</strong> <span id="taskDescription"></span></p>
-            </div>
+            <h2>Task Details</h2>
+            <p><strong>Title:</strong> <span id="modalTitle"></span></p>
+            <p><strong>Summary:</strong> <span id="modalSummary"></span></p>
+            <p><strong>Description:</strong> <span id="modalDescription"></span></p>
+            <p><strong>Assigned By:</strong> <span id="modalAssignedBy"></span></p>
+            <p><strong>Priority:</strong> <span id="modalPriority"></span></p>
+            <p><strong>Deadline:</strong> <span id="modalDeadline"></span></p>
+            <form id="acceptForm" method="post" action="${pageContext.request.contextPath}/tasks/accept">
+                <input type="hidden" name="taskId" id="taskIdField">
+                <button type="submit" id="acceptButton">Accept</button>
+            </form>
+            <button onclick="closeModal()" style="margin-top:10px;">Close</button>
         </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".task-detail-link").forEach(function (element) {
-        element.addEventListener("click", function (event) {
-            event.preventDefault();
-            document.getElementById("taskTitle").textContent = this.getAttribute("data-title");
-            document.getElementById("taskSummary").textContent = this.getAttribute("data-summary");
-            document.getElementById("taskDescription").textContent = this.getAttribute("data-description");
-            new bootstrap.Modal(document.getElementById("taskDetailModal")).show();
-        });
-    });
-});
-</script>
+    <script>
+        // Open modal function (same as task.jsp)
+        function openModal(card){
+            document.getElementById('modal').style.display = 'flex';
+            document.getElementById('modalTitle').innerText = card.getAttribute('data-title');
+            document.getElementById('modalSummary').innerText = card.getAttribute('data-summary');
+            document.getElementById('modalDescription').innerText = card.getAttribute('data-description');
+            document.getElementById('modalAssignedBy').innerText = card.getAttribute('data-assignedby');
+            document.getElementById('modalDeadline').innerText = card.getAttribute('data-duedate');
 
+            const priorityMap = {1:"Critical",2:"High",3:"Medium",4:"Low",5:"Optional/Backlog"};
+            document.getElementById('modalPriority').innerText = priorityMap[card.getAttribute('data-priority')];
+
+            let status = card.getAttribute('data-status');
+            let acceptButton = document.getElementById('acceptButton');
+            if(status === "In Progress" || status === "Completed"){
+                acceptButton.innerText = "Accepted";
+                acceptButton.disabled = true;
+            } else {
+                acceptButton.innerText = "Accept";
+                acceptButton.disabled = false;
+            }
+            document.getElementById('taskIdField').value = card.getAttribute('data-id');
+        }
+
+        function closeModal(){
+            document.getElementById('modal').style.display = 'none';
+        }
+    </script>
 </body>
 </html>

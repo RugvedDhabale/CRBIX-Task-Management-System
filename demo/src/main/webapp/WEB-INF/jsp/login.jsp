@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -7,7 +8,7 @@
   <title>Login Page</title>
 
   <!-- External CSS -->
-<link rel="stylesheet" type="text/css" href="<c:url value='/css/login.css'/>"/>
+  <link rel="stylesheet" href="<c:url value='/css/login.css'/>"/>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,10 +22,7 @@
   <!-- Header -->
   <header class="header">
     <div class="logo">
-      <h2>CRBIX SOLUTIONS</h2>
-    </div>
-    <div class="power-icon">
-      <i class="fas fa-power-off"></i>
+            <img class="img" src="${pageContext.request.contextPath}/img/CRBIXLOGO.png" alt="Logo">
     </div>
   </header>
 
@@ -32,18 +30,21 @@
   <div class="login-container">
     <!-- Left Illustration -->
     <div class="illustration">
-      <img src="<c:url value='/images/illustration.png'/>" alt="Employee working"/>
+            <img class="img" src="${pageContext.request.contextPath}/img/CRBIXLOGO.png" alt="Logo">
     </div>
 
     <!-- Right Login Form -->
     <div class="login-form">
-      <div class="logo-circle"></div>
+      <div class="logo-circle">
+        <p class="logocircleP">OK</p>
+      </div>
 
+      <!-- Form -->
       <form action="login" method="post">
         <input type="text" name="username" placeholder="Enter Username" value="${user.username}" required/>
         <input type="password" name="password" placeholder="Enter Password" value="${user.password}" required/>
 
-        <button type="submit">Login</button>
+        <button type="submit" id="loginBtn">Login</button>
       </form>
 
       <div class="register">
@@ -54,9 +55,10 @@
       </div>
 
       <c:if test="${not empty error}">
-        <p style="color:red">${error}</p>
+        <p class="error-msg">${error}</p>
       </c:if>
     </div>
   </div>
+
 </body>
 </html>
