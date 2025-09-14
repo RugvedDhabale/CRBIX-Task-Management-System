@@ -45,6 +45,8 @@ public class AdminController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         String inTime = (loginTime != null) ? loginTime.format(formatter) : "--:--";
 
+        model.addAttribute("username", admin.getUsername());
+
         model.addAttribute("inTime", inTime);
         model.addAttribute("taskCount", adminService.getTotalTasksAssigned());
         model.addAttribute("employees", adminService.getAllEmployees());
@@ -105,18 +107,44 @@ public class AdminController {
 
     // ---------------- ESCALATION VIEW ----------------
     //  Escalation Dashboard
+// ---------------- ESCALATION VIEW ----------------
+    // ---------------- ESCALATION VIEW ----------------
     @GetMapping("/admin/escalation")
-    public String escalationDashboard(Model model) {
-        Map<String, Object> escalationData = adminService.getEscalationData();
+    public String escalationDashboard(HttpSession session, Model model) {
+        String adminName = (String) session.getAttribute("adminName");
+        if (adminName == null) return "redirect:/login";
 
+        Admin admin = adminService.findAdminByUsername(adminName);
+        if (admin == null) return "redirect:/login";
+
+        // ✅ Format login time
+        LocalDateTime loginTime = admin.getInTime();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        String inTime = (loginTime != null) ? loginTime.format(formatter) : "--:--";
+
+        // ✅ Get total tasks assigned
+        Long taskCount = adminService.getTotalTasksAssigned();
+
+
+        // ✅ Add to model
+        model.addAttribute("username", admin.getUsername());
+        model.addAttribute("inTime", inTime);
+        model.addAttribute("taskCount", taskCount);
+
+        // ✅ Escalation data
+        Map<String, Object> escalationData = adminService.getEscalationData();
         model.addAttribute("dueEmployees", escalationData.get("dueEmployees"));
         model.addAttribute("escalatedEmployees", escalationData.get("escalatedEmployees"));
         model.addAttribute("dueTasksMap", escalationData.get("dueTasksMap"));
         model.addAttribute("escalatedTasksMap", escalationData.get("escalatedTasksMap"));
         model.addAttribute("escalationCountMap", escalationData.get("escalationCountMap"));
 
-        return "escalation"; // ye escalation.jsp ko render karega
+        return "escalation";
     }
+
+
+
+
 
 
     // ---------------- UPDATE TASK ----------------

@@ -133,6 +133,27 @@ select {
     transform: scale(1.05);
 }
 
+/* Status Colors */
+.task-card .task-right {
+    font-weight: bold;
+}
+
+/* Completed → Green */
+.task-card .task-right.completed {
+    color: #28a745;  /* Bootstrap green */
+}
+
+/* In-Progress → Orange */
+.task-card .task-right.in-progress {
+    color: #fd7e14;  /* Bootstrap orange */
+}
+
+/* Not Started → Red */
+.task-card .task-right.not-started {
+    color: #dc3545;  /* Bootstrap red */
+}
+
+
 /* Priority Colors */
 .priority-p1 { background: linear-gradient(to right, #ff4d4d, #b30000); }  /* Critical - Red */
 .priority-p2 { background: linear-gradient(to right, #ff944d, #e65c00); }  /* High - Orange */

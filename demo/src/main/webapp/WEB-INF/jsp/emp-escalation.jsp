@@ -34,7 +34,10 @@
 
         <!-- Right Panel -->
         <div class="right-panel escalation-panel">
+
+
             <div class="column">
+
                 <h3 class="column-title">Due Tasks</h3>
                 <div class="task-list">
                     <c:forEach var="task" items="${dueTasks}">
