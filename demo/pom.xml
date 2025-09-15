@@ -44,7 +44,9 @@
             </dependency>
 
 
-            <dependency>
+
+
+        <dependency>
                 <groupId>jakarta.servlet.jsp.jstl</groupId>
                 <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
             </dependency>
@@ -68,6 +70,12 @@
                 <artifactId>mysql-connector-j</artifactId>
                 <scope>runtime</scope>
             </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
             <!-- DevTools -->
             <dependency>
