@@ -128,7 +128,8 @@ body {
 .register button {
   margin-top: 5px;
   padding: 8px 40px;
-  background: white;
+  background: rgba(11,50,83,255);
+
   color: rgb(74, 145, 226);
   font-size: 13px;
   font-weight: 600;
