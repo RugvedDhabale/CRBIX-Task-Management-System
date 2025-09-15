@@ -7,22 +7,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Register Page</title>
 
-  <!-- External CSS -->
-  <link rel="stylesheet" type="text/css" href="<c:url value='/css/register.css'/>"/>
+
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
-  <!-- FontAwesome -->
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <!-- External CSS -->
+  <link rel="stylesheet" type="text/css" href="<c:url value='/css/register.css'/>"/>
+
 </head>
 <body>
 
   <!-- Header -->
   <header class="header">
     <div class="logo">
-      <h2>CRBIX SOLUTIONS</h2>
+      <img class="img" src="<c:url value='/img/CRBIXLOGO.png'/>" alt="CRBIX LOGO"/>
     </div>
     <div class="power-icon">
       <i class="fas fa-power-off"></i>
@@ -33,16 +33,16 @@
   <div class="register-container">
     <!-- Left Illustration -->
     <div class="illustration">
-      <img src="<c:url value='/images/illustration.png'/>" alt="Employee working"/>
+      <img src="<c:url value='/img/CRBIXLOGO.png'/>" alt="Employee working"/>
     </div>
+
 
     <!-- Right Register Form -->
     <div class="register-form">
-      <div class="avatar-circle"></div>
 
-<div class="alert alert-info" role="alert">
-  A simple info alert—check it out!
-</div>
+
+      <div class="avatar-circle"><p class="logocircleP">OK</p></div>
+
 
 
       <!-- Register Form -->
@@ -54,23 +54,27 @@
         <input type="password" name="confirmPassword" placeholder="Confirm Password" value="${user.confirmPassword}" required/>
         <input type="text" name="phone" placeholder="Phone No" value="${user.phone}" required/>
 
+
         <!-- Upload Section -->
         <div class="upload-section">
-          <label><strong>Upload Documents:</strong></label>
+          <label><strong class="uplodText">Upload Documents:</strong></label>
 
           <div class="file-upload">
-            <label>Aadhar Card:</label>
-            <input type="file" name="aadharFile" accept=".jpg,.jpeg,.png,.pdf" required/>
+            <label for="aadharFile" class="upload-btn">Upload Aadhar Card</label>
+            <span id="aadharFileName" class="file-name">No file chosen</span>
+            <input type="file" id="aadharFile" name="aadharFile" accept=".jpg,.jpeg,.png,.pdf" required/>
           </div>
 
           <div class="file-upload">
-            <label>PAN Card:</label>
-            <input type="file" name="panFile" accept=".jpg,.jpeg,.png,.pdf" required/>
+            <label for="panFile" class="upload-btn">Upload PAN Card</label>
+            <span id="panFileName" class="file-name">No file chosen</span>
+            <input type="file" id="panFile" name="panFile" accept=".jpg,.jpeg,.png,.pdf" required/>
           </div>
 
           <div class="file-upload">
-            <label>Marksheet:</label>
-            <input type="file" name="marksheetFile" accept=".pdf" required/>
+            <label for="marksheetFile" class="upload-btn">Upload Marksheet</label>
+            <span id="marksheetFileName" class="file-name">No file chosen</span>
+            <input type="file" id="marksheetFile" name="marksheetFile" accept=".pdf" required/>
           </div>
 
           <p class="note">
@@ -78,8 +82,20 @@
           </p>
         </div>
 
+        <!-- Script to show selected file name -->
+        <script>
+          document.querySelectorAll("input[type=file]").forEach(input => {
+            input.addEventListener("change", function() {
+              let fileName = this.files.length > 0 ? this.files[0].name : "No file chosen";
+              document.getElementById(this.id + "Name").textContent = fileName;
+            });
+          });
+        </script>
+
+
+
         <!-- Register Button -->
-        <button type="submit">Register</button>
+        <button id="registerBtn" type="submit">Register</button>
       </form>
 
       <!-- Link to Login -->
@@ -95,6 +111,12 @@
         <p style="color:red">${error}</p>
       </c:if>
     </div>
+
   </div>
+
+
+
+    <!-- FontAwesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>
