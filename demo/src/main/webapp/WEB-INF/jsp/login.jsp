@@ -1,32 +1,65 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page contentType="text/html;charset=UTF-8" %>
-<html>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Login</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login Page</title>
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="<c:url value='/css/login.css'/>"/>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <!-- FontAwesome -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<h2>Login</h2>
 
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+            <img class="img" src="${pageContext.request.contextPath}/img/CRBIXLOGO.png" alt="Logo">
+    </div>
+  </header>
 
-<form action="login" method="post">
-    Username: <input type="text" name="username" required><br><br>
-    Password: <input type="password" name="password" required><br><br>
-    <button type="submit">Login</button>
-</form>
+  <!-- Login Card -->
+  <div class="login-container">
+    <!-- Left Illustration -->
+    <div class="illustration">
+            <img class="img" src="${pageContext.request.contextPath}/img/CRBIXLOGO.png" alt="Logo">
+    </div>
 
-<br>
-<!-- Register button -->
-<form action="register" method="get">
-    <button type="submit">You want to registerr</button>
-</form>
+    <!-- Right Login Form -->
+    <div class="login-form">
+      <div class="logo-circle">
+        <p class="logocircleP">OK</p>
+      </div>
 
+      <!-- Form -->
+      <form action="login" method="post">
+        <input type="text" name="username" placeholder="Enter Username" value="${user.username}" required/>
+        <input type="password" name="password" placeholder="Enter Password" value="${user.password}" required/>
 
-<c:if test="${not empty error}">
-    <p style="color:red">${error}</p
+        <button type="submit" id="loginBtn">Login</button>
+      </form>
 
-    <div class="alert alert-secondary" role="alert">
-      ${error}}   </div>
-</c:if>
+      <div class="register">
+        <p>If you don't have an account?</p>
+        <form action="register" method="get">
+          <button type="submit" class="register-button">Register</button>
+        </form>
+      </div>
+
+      <c:if test="${not empty error}">
+        <p class="error-msg">${error}</p>
+      </c:if>
+    </div>
+  </div>
 
 </body>
 </html>

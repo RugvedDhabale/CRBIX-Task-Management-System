@@ -14,7 +14,10 @@ public class Admin {
     private String username;
     private String password;
 
+    @Column(name = "in_time")
     private LocalDateTime inTime;
+
+    @Column(name = "out_time")
     private LocalDateTime outTime;
 
     // Getters & Setters
