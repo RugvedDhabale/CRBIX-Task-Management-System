@@ -1,0 +1,137 @@
+Database Modules 
+
+# == Schema
+
+
+Students(#1)
+	StID
+	StCourse
+	StJDate
+	StCDuration
+	StPay
+	StPerf
+	StElg
+	StName
+	StEmail
+	StMobNum 
+	StPassword
+	Two-Step Verification
+	-temp OTP/Ques and Ans
+
+Admins(Educators, Support team)(#2)
+	EmpID
+	EmpSalary
+	EmpPerformance
+	EmpLectures
+	EmpDetails
+	EmpName
+	Empmail
+	EmpMoNum
+	EmpPass
+	Two-Step Verification
+	-temp OTP/Ques and Ans
+
+SuperAdmin(Manager/HRs)(#3)
+
+	HrID
+	HrSalary
+	HrPerformance
+	HrRecPro
+	HrPayrolls
+	HrPM
+	HrL&D
+	HrEr
+	HrOrg
+	HrName
+	HrEmail
+	HrMobNum
+	HrPass
+	Two-Step Verification
+	-temp OTP/Ques and Ans
+
+Lectures(#4)
+
+	LecID
+	LecTitle
+	LecSummary
+	LecUpDate
+	LecExpDate
+	LecAccess
+	LecCount
+	EmpID
+	EmpName
+	EmpDetails
+
+Downloads(#5)
+
+	EmpID
+	EmpName
+	LecTitle
+	LecSummary
+	LecUpDate
+	LecExpDate
+	LecAccess
+
+Performance(#6)
+
+	-Student
+	 StID
+	 StName
+	-Employee
+	 EmpID
+	 EmpName
+	-HR
+	 HrID
+	 HrName
+
+Streak(#7)
+
+	StID
+	StName
+	StrDate
+	StrActivity
+	
+Support(#8)
+
+	IsID
+	IsTitle
+	IsDetails
+	IsPriority
+	IsSeverity
+	IsStatus(new, in-process, resolved)
+	IsOOS
+	EmpID
+	EmpName
+	EmpDetails
+	StID
+	StName
+	StMobNum
+
+Assesment(#9)
+
+	AID
+	ATitle
+	ADetials
+	AScore
+	ARank
+	AAccess
+
+Certificate(#10)
+
+	CID
+	StName
+	StCourse
+	StCDuration
+	StPerf
+
+Companies(#11)
+
+	OID
+	OName
+	ODate
+	ORegNo
+	OPan
+	ODetials
+	OPoC
+	OEmpCnt
+	ONoPosOpn

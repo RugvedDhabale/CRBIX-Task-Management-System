@@ -1,0 +1,63 @@
+Login Screen
+-- Credentials(if user)
+-- Username, Password, email(users)
+	else
+-- Name, Email, Password (New Users)
+
+Profile Screen
+-Welcome Pop Up
+-- Everything about user
+
+
+-- Learnings -- 
+
+Unacademy
+- Profile Section
+	Current Course
+	Fields
+	-Current Progress
+	-Videos Watched
+	-Updates
+	-Educators/Updates from Educators/trainers
+	-Support
+	-Settings
+	--Name
+	--Email
+	--Other Editable Fields
+	Streak
+	Statistics
+	Achievements
+
+PrepInsta
+
+Majority is based on Prime Membership, if yes then whole app is accessible.
+
+-Profile Section
+	Profile Changes
+	-Name
+	-Email
+	-Password etc
+	Settings
+	Log out
+
+Physics Wallah
+
+Ham Burger based UI, all details related to Profile are given in Ham Burger
+
+Ham Burger
+	
+	Profile
+	-Profile Overview
+	-Performance
+	-Name
+	-Email
+	-Address
+	-Additional Settings
+	Downloads
+	Trainers/Educators
+	Support
+	Videos Watched
+	Current Standing
+	
+
+
