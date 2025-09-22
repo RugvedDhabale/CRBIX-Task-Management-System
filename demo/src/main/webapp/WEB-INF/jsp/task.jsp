@@ -19,6 +19,27 @@
         </div>
     </header>
 
+    <!-- Toast Notification Container -->
+    <div id="toast-container">
+        <c:set var="shown" value="false" />
+        <c:forEach var="task" items="${tasks}">
+            <c:if test="${task.status == 'Not Started' && !shown}">
+                <div class="toast-notification">
+                    <p>
+                        <strong>New Task Pending:</strong> ${task.title} <br/>
+                        <small>Assigned By: ${task.assignedBy != null ? task.assignedBy.username : 'Admin'}</small>
+                    </p>
+                    <span class="toast-close" onclick="closeToast(this)">×</span>
+                    <form method="post" action="${pageContext.request.contextPath}/tasks/accept" style="display:inline;">
+                        <input type="hidden" name="taskId" value="${task.id}">
+                        <button type="submit" class="accept-toast">Accept</button>
+                    </form>
+                </div>
+                <c:set var="shown" value="true"/>
+            </c:if>
+        </c:forEach>
+    </div>
+
     <!-- Main Layout -->
     <div class="main-layout">
         <!-- Left Panel -->
@@ -28,7 +49,6 @@
             <div class="panel-box">
                 In Time:<br> ${inTime}
             </div>
-
             <div class="panel-box">
                 No of Tasks Assigned:<br> ${taskCount}
             </div>
@@ -121,6 +141,13 @@
 
         function closeModal(){
             document.getElementById('modal').style.display = 'none';
+        }
+
+        function closeToast(span){
+            const toast = span.parentElement;
+            toast.remove();
+            // Optional: reload the page to show next not-started task
+            location.reload();
         }
     </script>
 </body>
