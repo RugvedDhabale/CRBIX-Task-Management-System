@@ -18,6 +18,4 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     // Tasks escalated (past deadline logic)
     @Query("SELECT t FROM Task t WHERE t.dueDate <= :escalationTime AND t.status <> 'Completed'")
     List<Task> findEscalatedTasks(LocalDateTime escalationTime);
-
-
 }

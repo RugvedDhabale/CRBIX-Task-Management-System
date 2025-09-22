@@ -14,7 +14,6 @@
         <div class="logo">
             <img class="img" src="${pageContext.request.contextPath}/img/CRBIXLOGO.png" alt="Logo">
         </div>
-
     </header>
 
     <!-- Main Layout -->
@@ -26,7 +25,6 @@
             <div class="panel-box">
                 In Time:<br> ${inTime}
             </div>
-
             <div class="panel-box">
                 No of Tasks Assigned:<br> ${taskCount}
             </div>
@@ -34,10 +32,7 @@
 
         <!-- Right Panel -->
         <div class="right-panel escalation-panel">
-
-
             <div class="column">
-
                 <h3 class="column-title">Due Tasks</h3>
                 <div class="task-list">
                     <c:forEach var="task" items="${dueTasks}">
@@ -109,7 +104,6 @@
     </div>
 
     <script>
-        // Open modal function (same as task.jsp)
         function openModal(card){
             document.getElementById('modal').style.display = 'flex';
             document.getElementById('modalTitle').innerText = card.getAttribute('data-title');
