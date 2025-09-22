@@ -1,0 +1,43 @@
+# Compiled output
+target/
+*.class
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.eclipse/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+README.md
+*.md
+
+# Logs
+*.log
+logs/
+
+# Maven wrapper (optional - uncomment if you don't want to include it)
+# .mvn/
+# mvnw
+# mvnw.cmd
+
+# Application properties (be careful - you might need some of these)
+# application-local.properties
+# application-dev.properties
+
+# Test files
+src/test/
+
+# Temporary files
+*.tmp
+*.temp
