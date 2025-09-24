@@ -1,41 +1,47 @@
-# Multi-stage build for Spring Boot application
-# Stage 1: Build the application
+# Stage 1: Build the application using a full JDK and Maven image
 FROM maven:3.9-eclipse-temurin-17 AS build
 
-# Set working directory
+# Set the working directory
 WORKDIR /app
 
-# Copy pom.xml first (for better Docker layer caching)
+# Copy pom.xml first to leverage Docker layer caching
 COPY pom.xml .
 
 # Download dependencies
 RUN mvn dependency:go-offline -B
 
-# Copy source code
+# Copy the rest of the source code
 COPY src ./src
 
-# Build the application (skip tests for faster builds)
+# Build the application and create the JAR file
 RUN mvn clean package -DskipTests
 
-# Stage 2: Create the runtime image
-FROM openjdk:17-jre-slim
 
-# Set working directory
+# Stage 2: Create the final, lightweight runtime image
+FROM eclipse-temurin:17-jre-alpine
+
+# Set the working directory
 WORKDIR /app
 
-# Create a non-root user for security
-RUN addgroup --system spring && adduser --system spring --ingroup spring
+# Install curl, which is needed for the HEALTHCHECK command
+RUN apk --no-cache add curl
+
+# Create a dedicated, non-root user and group for better security
+RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
 
-# Copy the JAR file from build stage
+# Copy the compiled JAR file from the build stage
+# Note: This assumes your build produces a single JAR in the target/ directory
 COPY --from=build /app/target/*.jar app.jar
 
-# Expose port (Render will use PORT environment variable)
+# Expose the port the application will run on
+# Render will set the PORT environment variable automatically
 EXPOSE 8080
 
-# Health check
+# Health check to ensure the application is running correctly
 HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8080/actuator/health || exit 1
 
-# Run the application
+# Entrypoint command to run the application
+# This uses the PORT variable provided by Render, defaulting to 8080
 ENTRYPOINT ["java", "-Dserver.port=${PORT:-8080}", "-jar", "/app/app.jar"]
