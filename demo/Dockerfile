@@ -5,13 +5,13 @@ FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
 
 # Copy pom.xml first to leverage Docker layer caching
-COPY pom.xml .
+COPY demo/pom.xml .
 
 # Download dependencies
 RUN mvn dependency:go-offline -B
 
 # Copy the rest of the source code
-COPY src ./src
+COPY demo/src ./src
 
 # Build the application and create the JAR file
 RUN mvn clean package -DskipTests
@@ -35,7 +35,6 @@ USER spring:spring
 COPY --from=build /app/target/*.jar app.jar
 
 # Expose the port the application will run on
-# Render will set the PORT environment variable automatically
 EXPOSE 8080
 
 # Health check to ensure the application is running correctly
@@ -43,5 +42,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8080/actuator/health || exit 1
 
 # Entrypoint command to run the application
-# This uses the PORT variable provided by Render, defaulting to 8080
-ENTRYPOINT ["java", "-Dserver.port=${PORT:-8080}", "-jar", "/app/app.jar"]
+ENTRYPOINT ["sh", "-c", "java -Dserver.port=${PORT:-8080} -jar /app/app.jar"]
